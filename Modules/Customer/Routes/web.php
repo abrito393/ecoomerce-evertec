@@ -13,4 +13,7 @@
 
 Route::prefix('customer')->group(function() {
     Route::get('/', 'CustomerController@index');
+    Route::get('/create', 'CustomerController@create')->name('customer.create');
+    Route::post('/store', 'CustomerController@store')->name('customer.store');
 });
+

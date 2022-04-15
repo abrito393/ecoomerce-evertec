@@ -6,8 +6,22 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 
+//services
+use Modules\Customer\Services\CustomerServices;
+
+//Request
+use Modules\Customer\Http\Requests\StoreCustomerRequest;
+
 class CustomerController extends Controller
 {
+    private $customerServices;
+
+    function __construct()
+    {
+        $this->customerServices = new CustomerServices();
+    }
+
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -28,12 +42,13 @@ class CustomerController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @param Request $request
+     * @param  \App\Http\Requests\StoreCustomerRequest  $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(StoreCustomerRequest $request)
     {
-        //
+        $customer = $this->customerServices->saveCustomer($request);
+        return redirect()->route('store.login');
     }
 
     /**

@@ -15,10 +15,14 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_name',80)->nullable();
-            $table->string('customer_email',120)->nullable();
-            $table->string('customer_mobile',40)->nullable();
+            $table->string('customerName',80)->nullable();
+            $table->string('customerEmail',120)->nullable();
+            $table->string('customerMobile',40)->nullable();
             $table->enum('status', ['CREATED', 'PAYED' , 'REJECTED'])->default('CREATED');
+            
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+
             $table->timestamps();
         });
     }

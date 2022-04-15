@@ -5,19 +5,56 @@ namespace Modules\Store\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Dnetix\Redirection\PlacetoPay as PlaceToPay;
 
 //Services
 use Modules\Product\Services\ProductReport;
+use Modules\Order\Services\orderServices;
 
 class StoreController extends Controller
 {
 
-    private $services;
+    private $productServices;
 
     function __construct()
     {
-        $this->services = new ProductReport();
+        $this->productServices = new ProductReport();
+        $this->orderServices = new orderServices();
     }
+
+    /**
+     * Show view for login .
+     * @return Renderable
+     */
+    public function login()
+    {
+        return view('store::auth.login');
+    }
+
+    /**
+     * login process.
+     * @return Renderable
+     */
+    public function auth(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+ 
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            return redirect()->route('store.index');
+        }
+ 
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ]);
+
+        return view('store::auth.login');
+    }
+    
 
     /**
      * Display a listing of the resource.
@@ -25,67 +62,59 @@ class StoreController extends Controller
      */
     public function index()
     {
-        $products = $this->services->getAllProducts();
-        return view('store::index')->with('products',$products);
+        $products = $this->productServices->getAllProducts();
+        return view('store::index')->with('products',$products)
+                ->with('apiAddcar',route('store.add.car'))
+                ->with('apiItemsCountCar',route('count.items.car'))
+                ->with('itemsCarByUser', $this->orderServices->getCountItemsCar());
+    }
+
+
+    /**
+     * crea un registro en la tabla car a traves del servicio addCar.
+     * @return object
+    */
+    public function addCar(Request $request)
+    {
+        return $this->orderServices->addCar($request);
     }
 
     /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
+     * devuelve la cantidad en numeros de items en la tabla CAR de un usuario espoecifico.
+     * @return int
+    */
+    public function countItemsCar()
     {
-        return view('store::create');
+        return $this->orderServices->getCountItemsCar();
     }
 
     /**
-     * Store a newly created resource in storage.
-     * @param Request $request
+     * Muestra los items que tiene agregado en el carrito previo a la compra
      * @return Renderable
      */
-    public function store(Request $request)
+
+    public function car()
     {
-        //
+        return view('store::car')
+        ->with('myItems' , $this->orderServices->getCarItems() )
+        ->with('apiAddcar',route('store.add.car'))
+        ->with('apiItemsCountCar',route('count.items.car'))
+        ->with('itemsCarByUser', $this->orderServices->getCountItemsCar());; 
     }
 
     /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
+     * Proceso el pago con la pasarela de pago placetopay
+     * @return object
      */
-    public function show($id)
+
+    public function processCar()
     {
-        return view('store::show');
+        return 1;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
+    public function deleteCar($id = null)
     {
-        return view('store::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        $this->orderServices->carDeleteItem($id);
+        return redirect()->route('car.index'); 
     }
 }

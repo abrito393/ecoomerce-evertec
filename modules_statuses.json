@@ -3,5 +3,6 @@
     "Customer": true,
     "Order": true,
     "Product": true,
-    "Store": true
+    "Store": true,
+    "Payment": true
 }
