@@ -7,6 +7,18 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## instalar el proyecto Test Ecommerce-evertec
+
+Para que el proyecto funcione adecuandamente debe configurar lo siguiente
+
+- La variable de entorno APP_URL un ejemplo seria **APP_URL=http://localhost/** pero depende cual es la URL que localmente se le asigne en su entonro.
+
+- Debe configurar las variables que por defecto trae laravel para la BD, se utilizo MYSQL como conexion.
+
+- Despues de configurar debe correr el comando **php artisan command:database-run** este es un comando se creo para el proceso de migraciones y seeders en en el sistema.
+
+- Listo ya puede inicializar el proyecto con el comando  **php artisan serve** 
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
