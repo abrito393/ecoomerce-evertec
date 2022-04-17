@@ -11,16 +11,19 @@ use Dnetix\Redirection\PlacetoPay as PlaceToPay;
 //Services
 use Modules\Product\Services\ProductReport;
 use Modules\Order\Services\orderServices;
+use Modules\Payment\Services\paymentServices;
+
 
 class StoreController extends Controller
 {
 
-    private $productServices;
+    private $productServices, $orderServices , $paymentServices;
 
     function __construct()
     {
         $this->productServices = new ProductReport();
         $this->orderServices = new orderServices();
+        $this->paymentServices = new paymentServices();
     }
 
     /**
@@ -62,11 +65,10 @@ class StoreController extends Controller
      */
     public function index()
     {
-        $products = $this->productServices->getAllProducts();
-        return view('store::index')->with('products',$products)
+        return view('store::index')->with('products', $this->productServices->getAllProducts() )
                 ->with('apiAddcar',route('store.add.car'))
                 ->with('apiItemsCountCar',route('count.items.car'))
-                ->with('itemsCarByUser', $this->orderServices->getCountItemsCar());
+                ->with('itemsCarByUser', Auth::user() ? $this->orderServices->getCountItemsCar() : 0 );
     }
 
 
@@ -109,7 +111,8 @@ class StoreController extends Controller
 
     public function processCar()
     {
-        return 1;
+        $this->orderServices->processMyCar();
+        return redirect()->route('car.index');
     }
 
     public function deleteCar($id = null)

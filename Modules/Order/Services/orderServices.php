@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 
 //Models
 use Modules\Order\Entities\Car;
+use Modules\Order\Entities\Order;
+use Modules\Order\Entities\OrderDetails;
 
 class orderServices 
 {
@@ -43,11 +45,41 @@ class orderServices
 
     public function getCarItems()
     {
-        return Car::with('product')->get();
+        return Car::with('product')->where('user_id' , Auth::user()->id)->get();
     }
 
     public function carDeleteItem($id) 
     {
         return Car::find($id)->delete();
+    }
+
+    public function processMyCar()
+    {
+        $myItems = Car::with('product')->where('user_id' , Auth::user()->id)->get();
+
+        $order = Order::create([
+            'customerName' => Auth::user()->name, 
+            'customerEmail' => Auth::user()->email,
+            'customerMobile' => Auth::user()->phone,
+            'user_id' => Auth::user()->id,
+        ]);
+
+        foreach ($myItems as $item) {
+            OrderDetails::create([
+                "unitPrice" => $item->product->price,
+                "quantity" => 1,
+                "order_id" => $order->id,
+                "product_id" => $item->product->id,
+            ]);
+
+            $item->delete();
+        }
+
+        return $order;
+    }
+
+    public function getMyOrders()
+    {
+        return Order::with('orderDetails.product')->where('user_id',Auth::user()->id)->get();
     }
 }

@@ -9,11 +9,15 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customerName','customerEmail','customerMobile','status'];
-    protected $table = 'order';
+    protected $fillable = ['customerName','customerEmail','customerMobile','status','user_id'];
+    protected $table = 'orders';
     
     protected static function newFactory()
     {
         return \Modules\Order\Database\factories\OrderFactory::new();
     }
+
+    function orderDetails(){
+        return $this->hasMany('Modules\Order\Entities\OrderDetails', 'order_id');
+	}
 }

@@ -33,7 +33,6 @@ class paymentServices
      */
     public function pay($reference, $total)
     {
-        $reference = "5976030f5575d";
         $request = [
             'payment' => [
                 'reference' => $reference,

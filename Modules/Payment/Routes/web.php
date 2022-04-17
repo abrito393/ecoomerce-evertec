@@ -13,4 +13,5 @@
 
 Route::prefix('payment')->group(function() {
     Route::get('/', 'PaymentController@index');
+    Route::get('/pay/order/{id?}', 'PaymentController@payOrder')->name('pay.order');
 });

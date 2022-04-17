@@ -16,10 +16,11 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
 
-            $table->string('creditCardNumber');
-            $table->string('creditCardExpDate');
-            $table->string('paymentMethod');
-            $table->float('paymentAmount', 8, 2);
+            $table->string('creditCardNumber')->nullable();
+            $table->string('creditCardExpDate')->nullable();
+            $table->string('paymentMethod')->nullable();
+            $table->string('urlPayment')->nullable();
+            $table->float('paymentAmount', 8, 2)->nullable();
 
             $table->unsignedBigInteger('order_id');
             $table->foreign('order_id')->references('id')->on('orders');

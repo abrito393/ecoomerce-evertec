@@ -16,4 +16,8 @@ class OrderDetails extends Model
     {
         return \Modules\Order\Database\factories\OrderDetailsFactory::new();
     }
+
+    function product(){
+		return $this->belongsTo('Modules\Product\Entities\Product','product_id');
+	}
 }

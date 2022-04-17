@@ -27,7 +27,7 @@
                         <a href="{{route('store.index')}}"><button type="button" class="btn btn-light">Inicio - {{Auth::user()->name}}</button></a>
                         <a href="{{route('store.login')}}"><button type="button" class="btn btn-danger">Cerrar sesion</button></a>
                         <a href="{{route('car.index')}}"><button type="button" class="btn btn-info">Carrito <span id="itemsCantCar" class="badge bg-dark">{{$itemsCarByUser}}</span></button></a>
-
+                        <a href="{{route('orders.self')}}"><button type="button" class="btn btn-primary">Mis pedidos</button></a>
                     @else
                         <a href="{{route('store.login')}}"><button type="button" class="btn btn-light">login</button></a>
                     @endif

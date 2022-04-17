@@ -42,7 +42,7 @@
 
             <div class="col-4"></div>
             <div class="col-4">Total: {{$total}}$ </div>
-            <div class="col-4"><a href="{{route('car.process')}}"><button type="button" class="btn btn-success">Comprar</button></a></div>
+            <div class="col-4"><a href="{{route('car.process')}}"><button type="button" class="btn btn-success">Procesar Carrito</button></a></div>
 
         </div>
     </div>

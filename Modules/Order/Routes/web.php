@@ -13,4 +13,5 @@
 
 Route::prefix('order')->group(function() {
     Route::get('/', 'OrderController@index');
+    Route::get('/self', 'OrderController@myOrders')->name('orders.self');
 });

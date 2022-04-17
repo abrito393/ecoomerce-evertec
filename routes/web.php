@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Store\Http\Controllers\StoreController;
- 
+use Modules\Payment\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +16,4 @@ use Modules\Store\Http\Controllers\StoreController;
 */
 
 Route::get('/', [StoreController::class, 'index']);
+Route::get('/response', [PaymentController::class, 'response']);
