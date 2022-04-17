@@ -16,15 +16,34 @@
                 <div id="accordion">
                     <div class="card">
                         <div class="card-header">
-                            <a class="btn" data-bs-toggle="collapse" href="#collapseOne">
-                                <div class="col-12">Pedido #{{$order->id}}</div><br>
+                            <a class="btn" data-bs-toggle="collapse" href="#collapse{{$order->id}}">
+                                <div class="col-12">Pedido #{{$order->id}} - Creada {{$order->created_at->diffForHumans()}}</div><br>
+                                @php
+                                    $status = 'Pendiente';
+                                    switch ($order->status) {
+                                        case 'PAYED':
+                                            $status = 'Pagado';
+                                            break;
+                                        case 'REJECTED':
+                                            $status = 'Rechazado';
+                                            break;
+                                        case 'PENDING':
+                                            $status = 'Pendiente';
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                @endphp
+                                <div class="col-12">Estatus: <span id="itemsCantCar" class="badge bg-dark">{{$status}}</span></div><br>
                             </a>
-                            <div class="row">
-                                <div class="col-12"><a href="{{route('pay.order',$order->id)}}"><button type="button" class="btn btn-success">Procesar Orden</button></a></div>
-                            </div>
+                            @if($status != 'Pagado' || $status != 'Pendiente')
+                                <div class="row">
+                                    <div class="col-12"><a href="{{route('pay.order',$order->id)}}"><button type="button" class="btn btn-success">Procesar Orden</button></a></div>
+                                </div>
+                            @endif
                         </div>
                         @php $total = 0; @endphp
-                        <div id="collapseOne" class="collapse" data-bs-parent="#accordion">
+                        <div id="collapse{{$order->id}}" class="collapse" data-bs-parent="#accordion">
                             <div class="card-body">
                                 <table class="table table-dark table-hover">
                                     <thead>

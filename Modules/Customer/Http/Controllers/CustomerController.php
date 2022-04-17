@@ -5,6 +5,7 @@ namespace Modules\Customer\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 //services
 use Modules\Customer\Services\CustomerServices;
@@ -48,6 +49,7 @@ class CustomerController extends Controller
     public function store(StoreCustomerRequest $request)
     {
         $customer = $this->customerServices->saveCustomer($request);
+        Auth::logout();
         return redirect()->route('store.login');
     }
 

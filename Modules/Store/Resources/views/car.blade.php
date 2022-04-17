@@ -40,10 +40,11 @@
                 </tbody>
             </table>
 
-            <div class="col-4"></div>
-            <div class="col-4">Total: {{$total}}$ </div>
-            <div class="col-4"><a href="{{route('car.process')}}"><button type="button" class="btn btn-success">Procesar Carrito</button></a></div>
-
+            @if( count($myItems) > 0 )
+                <div class="col-4"></div>
+                <div class="col-4">Total: {{$total}}$ </div>
+                <div class="col-4"><a href="{{route('car.process')}}"><button type="button" class="btn btn-success">Procesar Carrito</button></a></div>
+            @endif
         </div>
     </div>
 @endsection

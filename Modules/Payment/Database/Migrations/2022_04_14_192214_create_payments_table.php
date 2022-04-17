@@ -20,6 +20,7 @@ class CreatePaymentsTable extends Migration
             $table->string('creditCardExpDate')->nullable();
             $table->string('paymentMethod')->nullable();
             $table->string('urlPayment')->nullable();
+            $table->string('requestId')->nullable();
             $table->float('paymentAmount', 8, 2)->nullable();
 
             $table->unsignedBigInteger('order_id');

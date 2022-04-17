@@ -8,9 +8,21 @@ use Illuminate\Support\Facades\Auth;
 use Modules\Order\Entities\Car;
 use Modules\Order\Entities\Order;
 use Modules\Order\Entities\OrderDetails;
+use Modules\Payment\Entities\Payment;
 
 class orderServices 
 {
+
+    /**
+     * Servicio para devolver los datos de una orden.
+     *
+     * @return object
+     */
+    public function getOrder($id)
+    {
+        return Order::with(['orderDetails'])->find($id);
+    }
+
     /**
      * Servicio para crear un registro en la tabla CAR.
      *
@@ -62,6 +74,7 @@ class orderServices
             'customerEmail' => Auth::user()->email,
             'customerMobile' => Auth::user()->phone,
             'user_id' => Auth::user()->id,
+            'unixTime' => str_replace('.','',(string)microtime(true))
         ]);
 
         foreach ($myItems as $item) {
@@ -80,6 +93,16 @@ class orderServices
 
     public function getMyOrders()
     {
-        return Order::with('orderDetails.product')->where('user_id',Auth::user()->id)->get();
+        return Order::with('orderDetails.product')->where('user_id',Auth::user()->id)->orderBy('created_at','DESC')->get();
     }
+
+    public function assignStatusOrder($id,$status)
+    {
+        $order = Order::find($id);
+        $order->status = $status;
+        $order->save();
+
+        return $order;
+    }
+
 }

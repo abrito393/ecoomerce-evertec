@@ -20,7 +20,9 @@
                     <p class="card-text">{{$product->description}}</p>
                     <h4 class="card-title">{{$product->name}}</h4>
                     <h5 class="card-text">Precio: {{$product->price}}$</h5>
-                    <button class="btn btn-primary addCar" onclick="addCar('{{$product->id}}','{{$apiAddcar}}','{{$apiItemsCountCar}}')" >Agregar</button>
+                    @if (Auth::check())
+                        <button class="btn btn-primary addCar" onclick="addCar('{{$product->id}}','{{$apiAddcar}}','{{$apiItemsCountCar}}')" >Agregar</button>
+                    @endif
                 </div>
             </div>
         @endforeach

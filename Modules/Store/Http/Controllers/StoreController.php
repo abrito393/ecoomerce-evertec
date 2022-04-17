@@ -32,7 +32,7 @@ class StoreController extends Controller
      */
     public function login()
     {
-        return view('store::auth.login');
+        return view('store::auth.login')->with('itemsCarByUser', Auth::user() ? $this->orderServices->getCountItemsCar() : 0 );
     }
 
     /**
@@ -112,7 +112,7 @@ class StoreController extends Controller
     public function processCar()
     {
         $this->orderServices->processMyCar();
-        return redirect()->route('car.index');
+        return redirect()->route('orders.self');
     }
 
     public function deleteCar($id = null)

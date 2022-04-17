@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Hash;
 use Dnetix\Redirection\PlacetoPay as PlaceToPay;
 
 //Models
+use Modules\Payment\Entities\Payments;
+use Modules\Order\Entities\Order;
+
+//Models
 use Modules\Payment\Entities\CredentialsPayment;
 
 class paymentServices 
@@ -31,8 +35,16 @@ class paymentServices
      * 
      * @return object
      */
-    public function pay($reference, $total)
+    public function pay($order)
     {
+        $total = 0;
+        $reference = $order->unixTime;
+
+        foreach ($order->orderDetails as $detail) {
+            $total += $detail->unitPrice;
+        }
+        
+
         $request = [
             'payment' => [
                 'reference' => $reference,
@@ -43,10 +55,11 @@ class paymentServices
                 ],
             ],
             'expiration' => date('c', strtotime('+2 days')),
-            'returnUrl' => 'http://localhost:8888/response?reference=' . $reference,
+            'returnUrl' => env('APP_URL').'response?reference=' . $reference,
             'ipAddress' => '127.0.0.1',
             'userAgent' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/52.0.2743.116 Safari/537.36',
         ];
+
         
         $response = $this->placetopay->request($request);
         if ($response->isSuccessful()) {
@@ -59,5 +72,35 @@ class paymentServices
         }
 
         return $response;
+    }
+
+    public function queryPLacetoPay($id = null)
+    {
+        return $this->placetopay->query($id);
+    }
+
+    public function getPayment($id )
+    {
+        $order = Order::where('unixTime',$id)->first();
+        return Payments::where('order_id',$order->id)->orderBy('created_at','DESC')->first();
+    }
+
+
+    /**
+     * Metodo crear en la tabla Payments los datos del pago asociado a una orden.
+     * 
+     * @return object
+     */
+
+    public function createOrderPayment($urlPayment,$requestId, $orderId)
+    {
+
+        $payment = Payments::create([
+            "urlPayment" => $urlPayment,
+            "order_id" => $orderId,
+            "requestId" => $requestId
+        ]);
+
+        return $payment;
     }
 }

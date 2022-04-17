@@ -18,7 +18,8 @@ class CreateOrdersTable extends Migration
             $table->string('customerName',80)->nullable();
             $table->string('customerEmail',120)->nullable();
             $table->string('customerMobile',40)->nullable();
-            $table->enum('status', ['CREATED', 'PAYED' , 'REJECTED'])->default('CREATED');
+            $table->string('unixTime')->nullable();
+            $table->enum('status', ['CREATED', 'PAYED' , 'REJECTED' , 'PENDING'])->default('CREATED');
             
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
